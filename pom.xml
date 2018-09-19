@@ -132,23 +132,16 @@
   </dependencies>
 
   <build>
-    <finalName>GFINet</finalName>
-    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+    <!--<finalName>GFINet</finalName>-->
+    <!--<pluginManagement>&lt;!&ndash; lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) &ndash;&gt;-->
       <plugins>
-        <!-- jetty插件 -->
         <plugin>
-          <groupId>org.mortbay.jetty</groupId>
-          <artifactId>maven-jetty-plugin</artifactId>
-          <version>6.1.25</version>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <version>9.4.7.v20170914</version>
           <configuration>
-            <connectors>
-              <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-                <port>8080</port>
-                <maxIdleTime>60000</maxIdleTime>
-              </connector>
-            </connectors>
-            <contextPath>/</contextPath>
-            <scanIntervalSeconds>0</scanIntervalSeconds>
+            <stopKey>stop</stopKey>
+            <stopPort>8009</stopPort>
           </configuration>
         </plugin>
 
@@ -182,7 +175,9 @@
           <artifactId>maven-deploy-plugin</artifactId>
           <version>2.8.2</version>
         </plugin>
+
+
       </plugins>
-    </pluginManagement>
+    <!--</pluginManagement>-->
   </build>
 </project>
