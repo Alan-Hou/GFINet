@@ -21,7 +21,7 @@
             <div class="login-center clearfix">
                 <div class="login-center-img"><img src="/assets/img/name.png"/></div>
                 <div class="login-center-input">
-                    <input type="text" name="username" value="" placeholder="please input your username"
+                    <input type="text" id="username" name="username" value="" placeholder="please input your username"
                            onfocus="this.placeholder=''" onblur="this.placeholder='please input your username'"/>
                     <div class="login-center-input-text">username</div>
                 </div>
@@ -29,7 +29,7 @@
             <div class="login-center clearfix">
                 <div class="login-center-img"><img src="/assets/img/password.png"/></div>
                 <div class="login-center-input">
-                    <input type="password" name="password" value="" placeholder="please input your password"
+                    <input id="password" type="password" name="password" value="" placeholder="please input your password"
                            onfocus="this.placeholder=''" onblur="this.placeholder='please input your password'"/>
                     <div class="login-center-input-text">password</div>
                 </div>
@@ -75,6 +75,8 @@
         // /api/login
         var lenname = formData.get("username").length;
         var lenpass = formData.get("password").length;
+        // console.log($('#username').value);
+        console.log(formData.get("username"));
         console.log(lenname)
         console.log(lenpass)
         console.log(111);
@@ -85,12 +87,11 @@
             location.reload();
         }
         $.ajax({
-            contentType: false,
+            contentType: "application/json",
             processData: false,
             url: '/api/login',
             type:'post',
-            dataType:"JSON",
-            data:JSON.stringify({"username":formData.getElementsByName("username"),"password":formData.getElementsByName("password")}),
+            data:formData,
             success: function (data) {
                 if(data.succ==false)
                 {
