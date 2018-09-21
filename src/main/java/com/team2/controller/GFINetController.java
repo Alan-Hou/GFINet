@@ -19,11 +19,11 @@ public class GFINetController {
         return mv;
     }
 
-    @RequestMapping(value="/api/login",method= RequestMethod.POST,consumes = "application/json")
-    public void doLogin( @RequestBody User user) {
+    @RequestMapping(value="/api/login",method= RequestMethod.POST)
+    public void doLogin( @RequestParam String username ,@RequestParam String password) {
 
-        System.out.println("名字" + user.getUserName() + "密码" + user.getPassword());
-        String newPassword = EncoderByMd5(user.getPassword());
+        System.out.println("名字" + username + "密码" + password);
+        String newPassword = EncoderByMd5(password);
         System.out.println(newPassword);
         //  new ModelAndView("redirect:/toLogin？userName=" + userName + "&password=" + newPassword);
     }
