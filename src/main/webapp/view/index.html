@@ -29,7 +29,8 @@
             <div class="login-center clearfix">
                 <div class="login-center-img"><img src="/assets/img/password.png"/></div>
                 <div class="login-center-input">
-                    <input id="password" type="password" name="password" value="" placeholder="please input your password"
+                    <input id="password" type="password" name="password" value=""
+                           placeholder="please input your password"
                            onfocus="this.placeholder=''" onblur="this.placeholder='please input your password'"/>
                     <div class="login-center-input-text">password</div>
                 </div>
@@ -44,8 +45,10 @@
 </div>
 
 <!-- scripts -->
+
 <script src="/assets/js/particles.min.js"></script>
 <script src="/assets/js/jquery-3.2.1.js"></script>
+<script src="/layer/layer.js"></script>
 <script src="/assets/js/app.js"></script>
 <script type="text/javascript">
     function hasClass(elem, cls) {
@@ -75,70 +78,66 @@
         // /api/login
         var lenname = formData.get("username").length;
         var lenpass = formData.get("password").length;
-        // console.log($('#username').value);
-        console.log(formData.get("username"));
-        console.log(lenname)
-        console.log(lenpass)
-        console.log(111);
-        console.log(JSON.stringify({"username":formData.get("username"),"password":formData.get("password"),"type":1}));
+        console.log(JSON.stringify({
+            "username": formData.get("username"),
+            "password": formData.get("password"),
+            "type": 1
+        }));
         if (lenname < 6 || lenname > 10 || lenpass < 6 || lenpass > 10) {
             console.log(123213);
-            alert("用户名或者密码不符合规范");
-            $('#login-form')[0].reset();
+            layer.msg("the username or password is not proprely");
+            // $('#login-form')[0].reset();
             location.reload();
+            return;
         }
         $.ajax({
-            // processData: false,
-            // contentType:false,
-            url: '/api/login',
-            type:'post',
-            data:"username="+formData.get("username")+"&password="+formData.get("password"),
+            type: 'post',
+            data: "username=" + formData.get("username") + "&password=" + formData.get("password"),
             success: function (data) {
-                if(data.succ==false)
-                {
+                if (data.succ == false) {
                     removeClass(document.querySelector(".login"), "active")
                     removeClass(document.querySelector(".sk-rotating-plane"), "active")
                     document.querySelector(".login").style.display = "block"
 
-                    alert(data.describe);
+                    layer.msg(data.describe);
                     location.reload();
+                    return;
                 }
                 else {
-                    if(data.usertype==-1)
-                    {
-                        alert("user type is not exist");
+                    addClass(document.querySelector(".login"), "active")
+                    removeClass(document.querySelector(".login"), "active")
+                    removeClass(document.querySelector(".sk-rotating-plane"), "active")
+                    document.querySelector(".login").style.display = "block"
+                    layer.msg(data.describe);
+                    if (data.usertype == 0) {
+                        location.href = "/api/treder"
+                        // windows.location="/api/treder";
+                    }
+                    else if (data.usertype == 1) {
+                        // windows.location="/api/seller";
+                        location.href = "/api/seller";
+                    }
+                    else if (data.usertype == 2) {
+
+                        location.href = "api/audit";
+                        // windows.location="api/audit"
                     }
                     else {
+                        layer.msg("user type is not exist");
 
-                        addClass(document.querySelector(".login"), "active")
-                        removeClass(document.querySelector(".login"), "active")
-                        removeClass(document.querySelector(".sk-rotating-plane"), "active")
-                        document.querySelector(".login").style.display = "block"
-                        alert(data.describe);
-                        if(data.usertype==0)
-                        {
-                            windows.location="/api/treder";
-                        }
-                        else if(data.usertype==1)
-                        {
-                            windows.location="/api/seller";
-                        }
-                        else
-                        {
-                            windows.location="api/audit"
-                        }
                     }
+
 
                 }
             },
 
-            });
+        });
 
         setTimeout(function () {
             removeClass(document.querySelector(".login"), "active")
             removeClass(document.querySelector(".sk-rotating-plane"), "active")
             document.querySelector(".login").style.display = "block"
-            alert("time out")
+            layer.msg("time out")
 
         }, 5000)
     }
