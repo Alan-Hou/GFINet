@@ -91,6 +91,7 @@
             return;
         }
         $.ajax({
+            url:'/api/login',
             type: 'post',
             data: "username=" + formData.get("username") + "&password=" + formData.get("password"),
             success: function (data) {
@@ -126,8 +127,6 @@
                         layer.msg("user type is not exist");
 
                     }
-
-
                 }
             },
 
