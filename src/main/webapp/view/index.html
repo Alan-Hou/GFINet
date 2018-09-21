@@ -89,7 +89,8 @@
             processData: false,
             url: '/api/login',
             type:'post',
-            data:formData,
+            dataType:"JSON",
+            data:JSON.stringify({"username":formData.getElementsByName("username"),"password":formData.getElementsByName("password")}),
             success: function (data) {
                 if(data.succ==false)
                 {
