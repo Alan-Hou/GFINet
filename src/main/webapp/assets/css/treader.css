@@ -1,0 +1,42 @@
+#window-header {
+    background-color: #2071c9;
+    height: 80px;
+    width: 100%;
+    position: absolute;
+    box-shadow: 0 0 4px #fff;
+}
+.trader-tab{
+    height: 50px;
+    top:80px;
+    background-color: #f5f5f5;
+    position: absolute;
+    width: 100%;
+    float: left;
+
+}
+.float-left
+{
+    float: left;
+}
+.text-center
+{
+    text-align: center;
+}
+
+#trader-list{
+    height: 100%;
+    border-right-style:solid;
+    border-right-color:white;
+    width: 50%;
+    /*height: 100%;*/
+
+}
+#trader-list a{
+    position: absolute;
+    top: 10px;
+    bottom: 0;
+}
+#trade-add{
+    margin-top: 10px;
+    width: 50%;
+}
