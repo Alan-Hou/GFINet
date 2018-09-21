@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://mybatis.org/schema/mybatis-spring
+       http://mybatis.org/schema/mybatis-spring.xsd
+
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+
+
+    <!-- 自动扫描该包，SpringMVC会将包下用了@controller注解的类注册为Spring的controller -->
+
+
+    <context:component-scan base-package="com.team2.controller"/>
+
+    <!--<context:property-placeholder location="classpath:db.properties"/>-->
+    <!-- 设置默认配置方案 -->
+    <mvc:annotation-driven/>
+    <!-- 使用默认的Servlet来响应静态文件 -->
+    <mvc:default-servlet-handler/>
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://101.200.47.32:3306/GFINet"/>
+        <property name="username" value="root"/>
+        <property name="password" value="214453Hkp."/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:myBatis-config.xml"/>
+        <property name="typeAliasesPackage" value="com.zhouxl.album.demoin"/>
+        <property name="mapperLocations" value="classpath:com/team2/mapper/*Mapper.xml"/>
+    </bean>
+
+    <!--&lt;!&ndash; 配置事务管理器 &ndash;&gt;-->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          p:dataSource-ref="dataSource"/>
+
+    <!-- 指明使用注解的方式来管理事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+  <!---->
+
+    <mybatis:scan base-package="com.team2.mapper"/>
+
+
+    <!--&lt;!&ndash; 视图解析器   &ndash;&gt;-->
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          p:prefix="/WEB-INF/" p:suffix=".jsp"/>
+
+    <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"-->
+          <!--p:ignoreDefaultModelOnRedirect="true">-->
+        <!--<property name="messageConverters">-->
+            <!--<list>-->
+                <!--<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash; 邮件服务 &ndash;&gt;-->
+    <!--<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">-->
+    <!--<property name="host" value="smtp.qq.com"/>-->
+    <!--<property name="port" value="587"/>&lt;!&ndash;或许你可以用465端口，默认的25不适合&ndash;&gt;-->
+    <!--<property name="protocol" value="smtp"/>-->
+    <!--<property name="username" value="1994259826@qq.com"/>-->
+    <!--<property name="password" value="dzktxkbfprkxeicd"/>&lt;!&ndash;这里的是你通过短信后，获取的授权码&ndash;&gt;-->
+    <!--<property name="defaultEncoding" value="UTF-8"/>-->
+    <!--<property name="javaMailProperties">-->
+    <!--<props>-->
+    <!--<prop key="mail.smtp.auth">true</prop>-->
+    <!--<prop key="mail.smtp.timeout">25000</prop>-->
+    <!--</props>-->
+    <!--</property>-->
+
+    <!--</bean>-->
+
+    <!--&lt;!&ndash; this is a template message that we can pre-load with default state &ndash;&gt;-->
+    <!--<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">-->
+    <!--<property name="from" value="1994259826@qq.com"/>-->
+    <!--<property name="subject" value="尝试发邮件"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="mailUtil" class="com.zhouxl.util.MailUtil">-->
+    <!--<property name="mailSender" ref="mailSender"/>-->
+    <!--<property name="templateMessage" ref="templateMessage"/>-->
+    <!--</bean>-->
+
+
+    <!--<mvc:resources mapping="/js/**" location="/js/"/>-->
+
+
+</beans>
