@@ -62,7 +62,7 @@
     <!--&lt;!&ndash; 视图解析器   &ndash;&gt;-->
     <bean id="viewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver"
-          p:prefix="/WEB-INF/" p:suffix=".jsp"/>
+          p:prefix="/view/" p:suffix=".html"/>
 
     <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"-->
           <!--p:ignoreDefaultModelOnRedirect="true">-->

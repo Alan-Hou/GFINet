@@ -87,15 +87,15 @@
             location.reload();
         }
         $.ajax({
-            contentType: "application/json",
+            contentType: 'applcation/json',
             processData: false,
             url: '/api/login',
             type:'post',
-            data:formData,
+            dataType:'json',
+            data:JSON.stringify({"userName":formData.get("username"),"password":formData.get("password"),"type":1}),
             success: function (data) {
                 if(data.succ==false)
                 {
-
                     removeClass(document.querySelector(".login"), "active")
                     removeClass(document.querySelector(".sk-rotating-plane"), "active")
                     document.querySelector(".login").style.display = "block"
