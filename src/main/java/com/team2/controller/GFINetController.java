@@ -25,7 +25,14 @@ public class GFINetController {
         System.out.println("名字" + username + "密码" + password);
         String newPassword = EncoderByMd5(password);
         System.out.println(newPassword);
-        //  new ModelAndView("redirect:/toLogin？userName=" + userName + "&password=" + newPassword);
+        new ModelAndView("redirect:http://192.168.43.95:8080/user?username=" + username + "&password=" + newPassword);
+    }
+
+    @RequestMapping(value="/api/logout")
+    public ModelAndView logout() {
+        ModelAndView mv=new ModelAndView();
+        mv.setViewName("index");
+        return mv;
     }
 
     //利用MD5进行加密
