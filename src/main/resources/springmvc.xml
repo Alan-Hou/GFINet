@@ -58,6 +58,16 @@
 
     <mybatis:scan base-package="com.team2.mapper"/>
 
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+
+
+            </list>
+        </property>
+    </bean>
+
 
     <!--&lt;!&ndash; 视图解析器   &ndash;&gt;-->
     <bean id="viewResolver"

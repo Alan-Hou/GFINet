@@ -1,17 +1,28 @@
 package com.team2.controller;
 
 import com.team2.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import sun.misc.BASE64Encoder;
 
+import com.team2.result.*;
+
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 @Controller
 public class GFINetController {
+
+
+    @Autowired
+    RestTemplate template;
+
     @RequestMapping(value="/")
     public ModelAndView login() {
         ModelAndView mv=new ModelAndView();
@@ -19,20 +30,30 @@ public class GFINetController {
         return mv;
     }
 
-    @RequestMapping(value="/api/login",method= RequestMethod.POST)
-    public void doLogin( @RequestParam String username ,@RequestParam String password) {
+    @RequestMapping(value="/api/login",method= RequestMethod.POST,produces = "application/json")
+    public @ResponseBody UserResult doLogin(@RequestParam("username")String username,@RequestParam("password")String password) {
 
-        System.out.println("名字" + username + "密码" + password);
-        String newPassword = EncoderByMd5(password);
-        System.out.println(newPassword);
-        new ModelAndView("redirect:http://192.168.43.95:8080/user?username=" + username + "&password=" + newPassword);
+        System.out.println("/api/login");
+        ResponseEntity<UserResult> response=template.getForEntity("http://192.168.43.95:8080/get/user?username="+username+"&password="+password,UserResult.class);
+
+        System.out.println(response.toString());
+
+        UserResult result=response.getBody();
+
+        return result;
     }
-
     @RequestMapping(value="/api/logout")
     public ModelAndView logout() {
         ModelAndView mv=new ModelAndView();
         mv.setViewName("index");
         return mv;
+    }
+    @RequestMapping(value="/api/tarder")
+    public ModelAndView trader()
+    {
+        ModelAndView modelAndView=new ModelAndView();
+        modelAndView.setViewName("trader");
+        return modelAndView;
     }
 
     //利用MD5进行加密

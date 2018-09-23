@@ -39,7 +39,6 @@
                 login
             </div>
         </form>
-        >
     </div>
     <div class="sk-rotating-plane"></div>
 </div>
@@ -75,8 +74,8 @@
 
     document.querySelector(".login-button").onclick = function (data) {
         var formData = new FormData(document.getElementById("login-form"));
-        var username=$("#username").value;
-        var password=$("#password").value;
+        var username=$("#username").val();
+        var password=$("#password").val();
         // /api/login
         var lenname = username.length;
         var lenpass = password.length;
