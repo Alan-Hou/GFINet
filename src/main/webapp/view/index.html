@@ -75,53 +75,34 @@
 
     document.querySelector(".login-button").onclick = function (data) {
         var formData = new FormData(document.getElementById("login-form"));
+        var username=$("#username").value;
+        var password=$("#password").value;
         // /api/login
-        var lenname = formData.get("username").length;
-        var lenpass = formData.get("password").length;
-        console.log(JSON.stringify({
-            "username": formData.get("username"),
-            "password": formData.get("password"),
-            "type": 1
-        }));
+        var lenname = username.length;
+        var lenpass = password.length;
         if (lenname < 6 || lenname > 10 || lenpass < 6 || lenpass > 10) {
             console.log(123213);
             layer.msg("the username or password is not proprely");
-            // $('#login-form')[0].reset();
             location.reload();
             return;
         }
         $.ajax({
             url:'/api/login',
             type: 'post',
-            data: "username=" + formData.get("username") + "&password=" + formData.get("password"),
+            data: {username:username ,password:password},
             success: function (data) {
                 if (data.succ == false) {
-                    removeClass(document.querySelector(".login"), "active")
-                    removeClass(document.querySelector(".sk-rotating-plane"), "active")
-                    document.querySelector(".login").style.display = "block"
-
                     layer.msg(data.describe);
                     location.reload();
                     return;
                 }
                 else {
-                    addClass(document.querySelector(".login"), "active")
-                    removeClass(document.querySelector(".login"), "active")
-                    removeClass(document.querySelector(".sk-rotating-plane"), "active")
-                    document.querySelector(".login").style.display = "block"
                     layer.msg(data.describe);
                     if (data.usertype == 0) {
                         location.href = "/api/treder"
-                        // windows.location="/api/treder";
                     }
                     else if (data.usertype == 1) {
-                        // windows.location="/api/seller";
                         location.href = "/api/seller";
-                    }
-                    else if (data.usertype == 2) {
-
-                        location.href = "api/audit";
-                        // windows.location="api/audit"
                     }
                     else {
                         layer.msg("user type is not exist");
