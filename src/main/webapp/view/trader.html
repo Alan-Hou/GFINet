@@ -24,7 +24,8 @@
         <a style="text-decoration:none; color: white" href="/api/logout" style="color: white">demo</a>
     </div>
 </div>
-<div id="trader-content">
+<!--<div id="main-body">-->
+<div id="trader-content" style="background-color: white">
     <div class="trader-tab">
         <div class="float-left text-center hover-highlight highlight" id="trade-list">
             <label style="margin-top:10px; font-size: 20px;font-weight: normal">trade-list</label>
@@ -36,9 +37,19 @@
 
 
     <div id="trader-list-content" style="top: 80px; position:  absolute;">
-        <label style="margin-left:30px;margin-right: 20px ;font-weight: 400 ;line-height: 20px ;font-size: 16px"> search-id</label>
-        <input style="height: 38px;margin-right: 30px" id="search-id">
-        <button style="color: white; background: #1E9FFF;height: 38px ;width: 70px ;border: none">search</button>
+        <div id="search_part" style="width: 90%;margin: 10px auto 10px auto ;">
+            search-id:
+            <input style="height: 38px;margin-right: 1%;margin-left: 1%" id="search-id">
+            <button style="color: white; background: #1E9FFF;height: 38px ;width: 70px ;border: none">search
+            </button>
+            <select class="select">
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="opel">Opel</option>
+                <option value="audi">Audi</option>
+            </select>
+        </div>
+
         <div id="list" style="margin-top: 20px">
             <div class="row">
                 <div class="list">TradeOrigSys</div>
@@ -75,6 +86,7 @@
 
     </div>
 </div>
+<!--</div>-->
 <script src="/assets/js/jquery-3.2.1.js"></script>
 <script src="/layer/layer.js"></script>
 <script>
@@ -93,17 +105,17 @@
         // for (key in  data) {
         console.log("123")
         var node = $("<div></div>").addClass("row");
-        var node_origSys=$("<div></div>").addClass("list").text(data.TradeOrigSys);
-        var node_Txnl=$("<div></div>").addClass("list").text(data.Txnl);
-        var node_sid=$("<div></div>").addClass("list").text(data.sender_id);
-        var node_tradetime=$("<div></div>").addClass("list").text(data.trade_time);
-        var node_productid=$("<div></div>").addClass("list").text(data.product_id);
-        var node_amount=$("<div></div>").addClass("list").text(data.amount);
-        var node_price=$("<div></div>").addClass("list").text(data.price);
-        var node_status=$("<div></div>").addClass("list").text(data.status);
-        var node_receid=$("<div></div>").addClass("list").text(data.receiver_id);
-        var node_btn=$("<div></div>").addClass("btn-outer").append($("<button> </button>").addClass("op_button").text("entry"));
-        node.append(node_origSys,node_Txnl,node_sid,node_tradetime,node_productid,node_amount,node_price,node_status,node_receid,node_btn);
+        var node_origSys = $("<div></div>").addClass("list").text(data.TradeOrigSys);
+        var node_Txnl = $("<div></div>").addClass("list").text(data.Txnl);
+        var node_sid = $("<div></div>").addClass("list").text(data.sender_id);
+        var node_tradetime = $("<div></div>").addClass("list").text(data.trade_time);
+        var node_productid = $("<div></div>").addClass("list").text(data.product_id);
+        var node_amount = $("<div></div>").addClass("list").text(data.amount);
+        var node_price = $("<div></div>").addClass("list").text(data.price);
+        var node_status = $("<div></div>").addClass("list").text(data.status);
+        var node_receid = $("<div></div>").addClass("list").text(data.receiver_id);
+        var node_btn = $("<div></div>").addClass("btn-outer").append($("<button> </button>").addClass("op_button").text("entry"));
+        node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid, node_btn);
         $("#list").append(node);
 
 
