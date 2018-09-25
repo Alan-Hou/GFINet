@@ -1,28 +1,30 @@
 package com.team2.controller;
 
-import com.team2.entity.User;
+import com.alibaba.fastjson.JSONObject;
+import com.team2.result.Trade;
+import com.team2.result.UserResult;
+import com.team2.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
-import sun.misc.BASE64Encoder;
 
-import com.team2.result.*;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+import java.util.List;
 
 @Controller
+@SessionAttributes("currentUser")
 public class GFINetController {
-
-
     @Autowired
-    RestTemplate template;
-
+    RestTemplate restTemplate;
     @RequestMapping(value="/")
     public ModelAndView login() {
         ModelAndView mv=new ModelAndView();
@@ -31,46 +33,99 @@ public class GFINetController {
     }
 
     @RequestMapping(value="/api/login",method= RequestMethod.POST,produces = "application/json")
-    public @ResponseBody UserResult doLogin(@RequestParam("username")String username,@RequestParam("password")String password) {
+    public @ResponseBody
+    UserResult doLogin(@RequestParam("username")String username, @RequestParam("password")String password){
 
         System.out.println("/api/login");
-        ResponseEntity<UserResult> response=template.getForEntity("http://192.168.43.95:8080/get/user?username="+username+"&password="+password,UserResult.class);
-
+        ResponseEntity<UserResult> response=restTemplate.getForEntity("http://localhost:8080/get/user?username="+username+"&password="+password,UserResult.class);
         System.out.println(response.toString());
 
         UserResult result=response.getBody();
 
         return result;
     }
-    @RequestMapping(value="/api/logout")
-    public ModelAndView logout() {
-        ModelAndView mv=new ModelAndView();
+
+
+    @RequestMapping(value="/api/logout",method= RequestMethod.GET)
+    public ModelAndView logout(SessionStatus status) {
+        status.setComplete();
+        ModelAndView mv=new ModelAndView("redirect:http://192.168.43.95:8080/queray");
         mv.setViewName("index");
         return mv;
     }
-    @RequestMapping(value="/api/tarder")
-    public ModelAndView trader()
-    {
-        ModelAndView modelAndView=new ModelAndView();
-        modelAndView.setViewName("trader");
-        return modelAndView;
+
+    @RequestMapping(value="/api/trader",method= RequestMethod.GET,produces = "application/json")
+    public @ResponseBody ModelAndView searchAllTrades(@RequestParam("username") String username){
+        ModelAndView mv =new ModelAndView();
+        ModelMap map = mv.getModelMap();
+        map.addAttribute("currentUser",username);
+        System.out.println("/api/trader");
+        ResponseEntity<Trade> response=restTemplate.getForEntity("http://localhost:8080/get/getAllTrades?username="+username,Trade.class);
+        System.out.println(response.toString());
+        Trade result=response.getBody();
+        mv.addObject("Trade",result);
+        mv.setViewName("trader");
+        return mv;
     }
 
-    //利用MD5进行加密
-    public String EncoderByMd5(String str){
-        String newstr=null;
-        try {
-            //确定计算方法
-            MessageDigest md5=MessageDigest.getInstance("MD5");
-            BASE64Encoder base64en = new BASE64Encoder();
-            //加密后的字符串
-            newstr=base64en.encode(md5.digest(str.getBytes("utf-8")));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return newstr;
+    @RequestMapping(value="/api/trader/searchByStatus",method= RequestMethod.GET,produces = "application/json")
+    public @ResponseBody
+    Trade searchAllTradesByStatus(@RequestParam("status")Integer status, @ModelAttribute("currentUser") String username){
+
+        System.out.println("/api/trader/searchByStatus");
+        ResponseEntity<Trade> response=restTemplate.getForEntity("http://localhost:8080/get/Ttrade/getAllTradesByStatus?username="+username+"&status="+status,Trade.class);
+        System.out.println(response.toString());
+        Trade result=response.getBody();
+        return result;
     }
+
+    @RequestMapping(value="/api/trader/addOneTrade",method= RequestMethod.POST,produces = "application/json")
+    public @ResponseBody
+    String addOneTrade(@RequestParam("productId")String productId,
+                             @RequestParam("amount")Integer amount,
+                             @RequestParam("price")Integer price,
+                             @RequestParam("receiverId")String receiverId,
+                             @ModelAttribute("currentUser") String username){
+        ModelAndView mv =new ModelAndView();
+        System.out.println("/api/trader/addOneTrade");
+
+
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type=MediaType.parseMediaType("application/json;charset=UTF-8");
+
+        headers.setContentType(type);
+
+        headers.add("Accept",MediaType.APPLICATION_JSON.toString());
+
+        JSONObject object=new JSONObject();
+
+        object.put("tradeOriSys", Constant.TW);
+        object.put("sender_id",username);
+
+        Date trader_time=new Date();
+        object.put("trader_time",trader_time);
+
+        object.put("product_id",productId);
+
+        object.put("amount",amount);
+
+        object.put("price",price);
+
+        object.put("receiver_id",receiverId);
+
+        object.put("status",Constant.REQUESTED);
+
+        HttpEntity<String> formEntity=new HttpEntity<String>(object.toString(),headers);
+
+
+
+        ResponseEntity<String> response=restTemplate.postForEntity("http://localhost:8080/add/Ttrade/addOneTtrade",formEntity,String.class);
+        System.out.println(response.toString());
+        String result=response.getBody();
+
+        return result;
+    }
+
+
 
 }
