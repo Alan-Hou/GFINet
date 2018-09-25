@@ -8,13 +8,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-
-    <!--<link rel="stylesheet" href="/layui/css/layui.css" media="all">-->
-
     <link rel="stylesheet" href="/assets/css/trader.css">
+    <link rel="stylesheet" href="/assets/css/myPagination.css">
+
 
 </head>
-<body>
+<body id="bg-picture">
 <div id="window-header" class="text-center">
     <div if="logo" style="width: 50%;height: 100% ;float: left">
         <img style="padding-left:20px;height: 80px ;width: 160px;float: left" src="/assets/img/citi.png">
@@ -24,7 +23,6 @@
         <a style="text-decoration:none; color: white" href="/api/logout" style="color: white">demo</a>
     </div>
 </div>
-<!--<div id="main-body">-->
 <div id="trader-content" style="background-color: white">
     <div class="trader-tab">
         <div class="float-left text-center hover-highlight highlight" id="trade-list">
@@ -36,14 +34,14 @@
     </div>
 
 
-    <div id="trader-list-content" style="top: 80px; position:  absolute;">
+    <div id="trader-list-content" style="top: 55px; position:  absolute;">
         <div id="search_part" style="width: 90%;margin: 10px auto 10px auto ;">
             search-id:
-            <input style="height: 38px;margin-right: 1%;margin-left: 1%" id="search-id">
-            <button style="color: white; background: #1E9FFF;height: 38px ;width: 70px ;border: none">search
+            <input style="height: 35px;margin-right: 1%;margin-left: 1%" id="search-id">
+            <button style="color: white; background: #1E9FFF;height: 35px ;width: 70px ;border: none">search
             </button>
             <select class="select">
-                <option value="volvo">Volvo</option>
+                <option value="All">All</option>
                 <option value="saab">Saab</option>
                 <option value="opel">Opel</option>
                 <option value="audi">Audi</option>
@@ -52,19 +50,19 @@
 
         <div id="list" style="margin-top: 20px">
             <div class="row">
-                <div class="list">TradeOrigSys</div>
-                <div class="list">Txnl</div>
-                <div class="list">sender_id</div>
-                <div class="list">trade-time</div>
-                <div class="list">product-id</div>
-                <div class="list">amount</div>
-                <div class="list">price</div>
-                <div class="list">Status</div>
-                <div class="list">receiver_id</div>
-                <div class="list">operation</div>
+                <div class="list-title">TradeOrigSys</div>
+                <div class="list-title">Txnl</div>
+                <div class="list-title">sender_id</div>
+                <div class="list-title">trade-time</div>
+                <div class="list-title">product-id</div>
+                <div class="list-title">amount</div>
+                <div class="list-title">price</div>
+                <div class="list-title">Status</div>
+                <div class="list-title">receiver_id</div>
                 <br>
             </div>
         </div>
+        <div id="pagination" class="pagination"></div>
     </div>
     <div class="hide" id="trade-add-content">
         <form id="trade-add-form" method="post">
@@ -89,10 +87,12 @@
 <!--</div>-->
 <script src="/assets/js/jquery-3.2.1.js"></script>
 <script src="/layer/layer.js"></script>
+<script src="/assets/js/myPagination.js"></script>
 <script>
+    var username = "${sessionScope.user.username}";
     var data = {
         TradeOrigSys: "trade",
-        Txnl: "demo",
+        Txnl: "123123",
         sender_id: "12121",
         trade_time: "2018-09-22",
         product_id: "123213123",
@@ -101,9 +101,25 @@
         status: "pending",
         receiver_id: "10001"
     };
+
+
+
     $(function () {
+        new myPagination({
+            id: 'pagination',
+            curPage:1, //初始页码
+            pageTotal: 50, //总页数
+            pageAmount: 10,  //每页多少条
+            dataTotal: 500, //总共多少条数据
+            pageSize: 5, //可选,分页个数
+            showPageTotalFlag:true, //是否显示数据统计
+            showSkipInputFlag:true, //是否支持跳转
+            getPage: function (page) {
+                console.log(page);
+
+            }
+        })
         // for (key in  data) {
-        console.log("123")
         var node = $("<div></div>").addClass("row");
         var node_origSys = $("<div></div>").addClass("list").text(data.TradeOrigSys);
         var node_Txnl = $("<div></div>").addClass("list").text(data.Txnl);
@@ -114,14 +130,13 @@
         var node_price = $("<div></div>").addClass("list").text(data.price);
         var node_status = $("<div></div>").addClass("list").text(data.status);
         var node_receid = $("<div></div>").addClass("list").text(data.receiver_id);
-        var node_btn = $("<div></div>").addClass("btn-outer").append($("<button> </button>").addClass("op_button").text("entry"));
-        node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid, node_btn);
+        // var node_btn = $("<div></div>").addClass("btn-outer").append($("<button> </button>").addClass("op_button").text("entry"));
+        node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
         $("#list").append(node);
-
-
         // }
 
-    })
+    });
+
     $("#trade-add").click(function () {
         $("#trade-list").removeClass("highlight");
         $("#trade-add").addClass("highlight")

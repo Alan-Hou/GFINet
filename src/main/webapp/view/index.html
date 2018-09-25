@@ -42,9 +42,6 @@
     </div>
     <div class="sk-rotating-plane"></div>
 </div>
-
-<!-- scripts -->
-
 <script src="/assets/js/particles.min.js"></script>
 <script src="/assets/js/jquery-3.2.1.js"></script>
 <script src="/layer/layer.js"></script>
@@ -79,7 +76,7 @@
         // /api/login
         var lenname = username.length;
         var lenpass = password.length;
-        if (lenname < 6 || lenname > 10 || lenpass < 6 || lenpass > 10) {
+        if (lenname < 5 || lenname > 10 || lenpass < 5 || lenpass > 10) {
             console.log(123213);
             layer.msg("the username or password is not proprely");
             location.reload();
