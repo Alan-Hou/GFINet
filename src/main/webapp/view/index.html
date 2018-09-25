@@ -98,10 +98,10 @@
                 else {
                     layer.msg(data.describe);
                     if (data.usertype == 0) {
-                        location.href = "/api/treder"
+                        location.href = "/api/treder?username=testuser";
                     }
                     else if (data.usertype == 1) {
-                        location.href = "/api/seller";
+                        location.href = "/api/seller?username=testuser";
                     }
                     else {
                         layer.msg("user type is not exist");
