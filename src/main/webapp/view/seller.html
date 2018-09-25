@@ -17,7 +17,7 @@
 <div id="window-header" class="text-center">
     <div if="logo" style="width: 50%;height: 100% ;float: left">
         <img style="padding-left:20px;height: 80px ;width: 160px;float: left" src="/assets/img/citi.png">
-        <h1 style="color: white">Trader Workstation</h1>
+        <h1 style="color: white">Seller Workstation</h1>
     </div>
     <div id="username" style="float: right ;height: 100%;margin-right: 50px ;margin-top: 20px">
         <a style="text-decoration:none; color: white" href="/api/logout" style="color: white">demo</a>
@@ -78,7 +78,7 @@
             <label>receiver-id</label>
             <input id="receiver-id">
             <br>
-            <button> submit</button>
+            <button id="submit"> submit</button>
         </form>
 
 
@@ -101,6 +101,29 @@
         status: "pending",
         receiver_id: "10001"
     };
+    $("#submit").click(function()
+    {
+        var product_id=$("product-id").val();
+        var amount=$("amount").val();
+        var price=$("price").val();
+        var receiver_id=$("receiver-id").val();
+        $.ajax({
+            url:"/api/seller/addOneTrade",
+            type:'post',
+            data:{product_id:product_id,amount:amount,price:price,receiver_id:receiver_id},
+            success:function(data)
+            {
+                layer.msg(data.status);
+                location.reload();
+            },
+            error:function () {
+                layer.msg("error")
+                location.reload();
+            }
+
+        })
+
+    })
 
 
 

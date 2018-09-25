@@ -78,7 +78,7 @@
             <label>receiver-id</label>
             <input id="receiver-id">
             <br>
-            <button> submit</button>
+            <button id="submit"> submit</button>
         </form>
 
 
@@ -103,39 +103,49 @@
     };
 
 
-
     $(function () {
         new myPagination({
             id: 'pagination',
-            curPage:1, //初始页码
+            curPage: 1, //初始页码
             pageTotal: 50, //总页数
             pageAmount: 10,  //每页多少条
             dataTotal: 500, //总共多少条数据
             pageSize: 5, //可选,分页个数
-            showPageTotalFlag:true, //是否显示数据统计
-            showSkipInputFlag:true, //是否支持跳转
+            showPageTotalFlag: true, //是否显示数据统计
+            showSkipInputFlag: true, //是否支持跳转
             getPage: function (page) {
                 console.log(page);
 
             }
         })
-        // for (key in  data) {
-        var node = $("<div></div>").addClass("row");
-        var node_origSys = $("<div></div>").addClass("list").text(data.TradeOrigSys);
-        var node_Txnl = $("<div></div>").addClass("list").text(data.Txnl);
-        var node_sid = $("<div></div>").addClass("list").text(data.sender_id);
-        var node_tradetime = $("<div></div>").addClass("list").text(data.trade_time);
-        var node_productid = $("<div></div>").addClass("list").text(data.product_id);
-        var node_amount = $("<div></div>").addClass("list").text(data.amount);
-        var node_price = $("<div></div>").addClass("list").text(data.price);
-        var node_status = $("<div></div>").addClass("list").text(data.status);
-        var node_receid = $("<div></div>").addClass("list").text(data.receiver_id);
-        // var node_btn = $("<div></div>").addClass("btn-outer").append($("<button> </button>").addClass("op_button").text("entry"));
-        node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
-        $("#list").append(node);
-        // }
+        for (key in  data) {
+            var node = $("<div></div>").addClass("row");
+            var node_origSys = $("<div></div>").addClass("list").text(data.TradeOrigSys);
+            var node_Txnl = $("<div></div>").addClass("list").text(data.Txnl);
+            var node_sid = $("<div></div>").addClass("list").text(data.sender_id);
+            var node_tradetime = $("<div></div>").addClass("list").text(data.trade_time);
+            var node_productid = $("<div></div>").addClass("list").text(data.product_id);
+            var node_amount = $("<div></div>").addClass("list").text(data.amount);
+            var node_price = $("<div></div>").addClass("list").text(data.price);
+            var node_status = $("<div></div>").addClass("list").text(data.status);
+            var node_receid = $("<div></div>").addClass("list").text(data.receiver_id);
+            // var node_btn = $("<div></div>").addClass("btn-outer").append($("<button> </button>").addClass("op_button").text("entry"));
+            node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
+            $("#list").append(node);
+        }
 
     });
+    $("#submit").click(function()
+    {
+        var product_id=$("product-id").val();
+        var amount=$("amount").val();
+        var price=$("price").val();
+        var receiver_id=$("receiver-id").val();
+        $.ajax({
+            url:"/api/"
+        })
+
+    })
 
     $("#trade-add").click(function () {
         $("#trade-list").removeClass("highlight");

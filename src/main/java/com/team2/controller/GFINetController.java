@@ -70,14 +70,12 @@ public class GFINetController {
     }
     @RequestMapping(value="/api/seller",method= RequestMethod.GET,produces = "application/json")
     public @ResponseBody ModelAndView searchAllSellers(@RequestParam("username") String username){
-        System.out.println("/api/seller"+username);
         ModelAndView mv =new ModelAndView();
         ModelMap map = mv.getModelMap();
         map.addAttribute("currentUser",username);
         ResponseEntity<Trade[]> response=restTemplate.getForEntity("http://192.168.43.95:8080/get/Strade/getAllTrades?username="+username,Trade[].class);
-        System.out.println(response.toString());
         List<Trade> result= Arrays.asList(response.getBody());
-        mv.addObject("Trade",result);
+        mv.addObject("trades",result);
         mv.setViewName("seller");
         return mv;
     }
@@ -94,10 +92,10 @@ public class GFINetController {
 
     @RequestMapping(value="/api/trader/addOneTrade",method= RequestMethod.POST,produces = "application/json")
     public @ResponseBody
-    String tAddOneTrade(@RequestParam("productId")String productId,
+    String tAddOneTrade(@RequestParam("product_id")String productId,
                              @RequestParam("amount")Integer amount,
                              @RequestParam("price")Integer price,
-                             @RequestParam("receiverId")String receiverId,
+                             @RequestParam("receiver_id")String receiverId,
                              @ModelAttribute("currentUser") String username){
         System.out.println("/api/trader/addOneTrade");
         HttpHeaders headers = new HttpHeaders();
@@ -117,15 +115,14 @@ public class GFINetController {
         HttpEntity<String> formEntity=new HttpEntity<String>(object.toString(),headers);
         ResponseEntity<String> response=restTemplate.postForEntity("http://192.168.43.95:8080/add/Ttrade/addOneTtrade",formEntity,String.class);
         String result=response.getBody();
-        System.out.println(result);
         return result;
     }
     @RequestMapping(value="/api/seller/addOneTrade",method= RequestMethod.POST,produces = "application/json")
     public @ResponseBody
-    String sAddOneTrade(@RequestParam("productId")String productId,
+    String sAddOneTrade(@RequestParam("product_id")String productId,
                        @RequestParam("amount")Integer amount,
                        @RequestParam("price")Integer price,
-                       @RequestParam("receiverId")String receiverId,
+                       @RequestParam("receiver_id")String receiverId,
                        @ModelAttribute("currentUser") String username){
         System.out.println("/api/seller/addOneTrade");
         HttpHeaders headers = new HttpHeaders();
