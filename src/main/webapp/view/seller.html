@@ -20,7 +20,7 @@
         <h1 style="color: white">Seller Workstation</h1>
     </div>
     <div id="username" style="float: right ;height: 100%;margin-right: 50px ;margin-top: 20px">
-        <a style="text-decoration:none; color: white" href="/api/logout" style="color: white">demo</a>
+        <a id="user-logout" style="text-decoration:none; color: white" href="/api/logout" style="color: white"></a>
     </div>
 </div>
 <div id="trader-content" style="background-color: white">
@@ -89,76 +89,95 @@
 <script src="/layer/layer.js"></script>
 <script src="/assets/js/myPagination.js"></script>
 <script>
-    var username = "${sessionScope.user.username}";
-    var data = {
-        TradeOrigSys: "trade",
-        Txnl: "123123",
-        sender_id: "12121",
-        trade_time: "2018-09-22",
-        product_id: "123213123",
-        amount: "21321",
-        price: "$123.1",
-        status: "pending",
-        receiver_id: "10001"
-    };
-    $("#submit").click(function()
-    {
-        var product_id=$("product-id").val();
-        var amount=$("amount").val();
-        var price=$("price").val();
-        var receiver_id=$("receiver-id").val();
-        $.ajax({
-            url:"/api/seller/addOneTrade",
-            type:'post',
-            data:{product_id:product_id,amount:amount,price:price,receiver_id:receiver_id},
-            success:function(data)
+    $(function () {
+        var pageNum;
+        $("#user-logout").text();
+        $.ajax(
             {
+                url:"/api/getTradeList",
+                type:"post",
+                success:function(data)
+                {
+                    // new myPagination({
+                    //     id: 'pagination',
+                    //     curPage: 1, //初始页码
+                    //     pageTotal:2, //总页数
+                    //     pageAmount: 10,  //每页多少条
+                    //     dataTotal: data.length, //总共多少条数据
+                    //     pageSize: 5, //可选,分页个数
+                    //     showPageTotalFlag: true, //是否显示数据统计
+                    //     showSkipInputFlag: true, //是否支持跳转
+                    //     getPage: function (page) {
+                    //         pageNum=page;
+                    //         console.log(page);
+                    //         console.log("12312");
+                    //     }
+                    // })
+                    // console.log("1");
+                    // console.log("2");
+                    // console.log("3");
+
+
+                    // for (var key=10*pageNum;key<10*(pageNum+1);key++) {
+                    for(key in data){
+                        console.log("data");
+                        console.log("I get data :",data);
+                        console.log(data.length);
+                        var node = $("<div></div>").addClass("row");
+                        var node_origSys = $("<div></div>").addClass("list").text(data[key].tradeOrigSys);
+                        var node_Txnl = $("<div></div>").addClass("list").text(data[key].txni);
+                        var node_sid = $("<div></div>").addClass("list").text(data[key].sender_id);
+                        var node_tradetime = $("<div></div>").addClass("list").text(data[key].trade_time);
+                        var node_productid = $("<div></div>").addClass("list").text(data[key].product_id);
+                        var node_amount = $("<div></div>").addClass("list").text(data[key].amount);
+                        var node_price = $("<div></div>").addClass("list").text(data[key].price);
+                        var node_status = $("<div></div>").addClass("list").text(data[key].status);
+                        var node_receid = $("<div></div>").addClass("list").text(data[key].receiver_id);
+                        node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
+                        $("#list").append(node);
+                    }
+                    console.log("4");
+
+
+                },
+                error:function()
+                {
+                    layer.msg("error");
+                }
+            }
+        )
+
+
+        // var newdata=JSON.parse(data);
+        // var jsonArr = [{},{}]
+        // var trades=JSON.parse(trades);
+
+        // console.log("I get data :",data);
+
+    });
+
+    $("#submit").click(function () {
+        var product_id = $("product-id").val();
+        var amount = $("amount").val();
+        var price = $("price").val();
+        var receiver_id = $("receiver-id").val();
+        $.ajax({
+            url: '/api/seller/addOneTrade',
+            type: "post",
+            data: {product_id: product_id, amount: amount, price: price, receiver_id: receiver_id},
+            success: function (data) {
                 layer.msg(data.status);
-                location.reload();
+                // location.reload();
             },
-            error:function () {
+            error: function () {
+                console.log(product_id);
                 layer.msg("error")
-                location.reload();
+                // location.reload();
             }
 
         })
 
     })
-
-
-
-    $(function () {
-        new myPagination({
-            id: 'pagination',
-            curPage:1, //初始页码
-            pageTotal: 50, //总页数
-            pageAmount: 10,  //每页多少条
-            dataTotal: 500, //总共多少条数据
-            pageSize: 5, //可选,分页个数
-            showPageTotalFlag:true, //是否显示数据统计
-            showSkipInputFlag:true, //是否支持跳转
-            getPage: function (page) {
-                console.log(page);
-
-            }
-        })
-        // for (key in  data) {
-        var node = $("<div></div>").addClass("row");
-        var node_origSys = $("<div></div>").addClass("list").text(data.TradeOrigSys);
-        var node_Txnl = $("<div></div>").addClass("list").text(data.Txnl);
-        var node_sid = $("<div></div>").addClass("list").text(data.sender_id);
-        var node_tradetime = $("<div></div>").addClass("list").text(data.trade_time);
-        var node_productid = $("<div></div>").addClass("list").text(data.product_id);
-        var node_amount = $("<div></div>").addClass("list").text(data.amount);
-        var node_price = $("<div></div>").addClass("list").text(data.price);
-        var node_status = $("<div></div>").addClass("list").text(data.status);
-        var node_receid = $("<div></div>").addClass("list").text(data.receiver_id);
-        // var node_btn = $("<div></div>").addClass("btn-outer").append($("<button> </button>").addClass("op_button").text("entry"));
-        node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
-        $("#list").append(node);
-        // }
-
-    });
 
     $("#trade-add").click(function () {
         $("#trade-list").removeClass("highlight");

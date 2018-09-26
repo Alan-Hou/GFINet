@@ -6,15 +6,15 @@ import java.util.Date;
 public class Trade implements Serializable {
 
 
-    private int tradeOriSys;
+    private int tradeOrigSys;
 
 
-    private String txnl;
+    private String txni;
 
 
     private String sender_id;
 
-    private Date trader_time;
+    private Date trade_time;
 
     private String product_id;
 
@@ -24,31 +24,31 @@ public class Trade implements Serializable {
 
     private String receiver_id;
 
-
     private Integer status;
 
-    public Integer getStatus() {
-        return status;
+
+    public String getTxni() {
+        return txni;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setTxni(String txni) {
+        this.txni = txni;
     }
 
-    public String getTxnl() {
-        return txnl;
+    public Date getTrade_time() {
+        return trade_time;
     }
 
-    public void setTxnl(String txnl) {
-        this.txnl = txnl;
+    public void setTrade_time(Date trade_time) {
+        this.trade_time = trade_time;
     }
 
-    public int getTradeOriSys() {
-        return tradeOriSys;
+    public int getTradeOrigSys() {
+        return tradeOrigSys;
     }
 
-    public void setTradeOriSys(int tradeOriSys) {
-        this.tradeOriSys = tradeOriSys;
+    public void setTradeOrigSys(int tradeOrigSys) {
+        this.tradeOrigSys = tradeOrigSys;
     }
 
     public String getSender_id() {
@@ -59,13 +59,7 @@ public class Trade implements Serializable {
         this.sender_id = sender_id;
     }
 
-    public Date getTrader_time() {
-        return trader_time;
-    }
 
-    public void setTrader_time(Date trader_time) {
-        this.trader_time = trader_time;
-    }
 
     public String getProduct_id() {
         return product_id;
@@ -97,5 +91,29 @@ public class Trade implements Serializable {
 
     public void setReceiver_id(String receiver_id) {
         this.receiver_id = receiver_id;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Trade{" +
+                "tradeOrigSys=" + tradeOrigSys +
+                ", txni='" + txni + '\'' +
+                ", sender_id='" + sender_id + '\'' +
+                ", trade_time=" + trade_time +
+                ", product_id='" + product_id + '\'' +
+                ", amount=" + amount +
+                ", price=" + price +
+                ", receiver_id='" + receiver_id + '\'' +
+                ", status=" + status +
+                '}';
     }
 }
