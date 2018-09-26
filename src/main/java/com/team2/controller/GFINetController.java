@@ -106,20 +106,20 @@ public class GFINetController {
         List<Trade> result = Arrays.asList(response.getBody());
         return JSONObject.toJSONString(result);
     }
-    @RequestMapping(value = "/api/trader/searchByTxni", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/api/trader/search", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     String tSearchAllTradesById(@RequestParam("txni") String txni, @ModelAttribute("currentUser") String username) {
-        System.out.println("/api/trader/searchByTxni");
-        ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Ttrade/getAllTradesById?username=" + username + "&txni=" + txni, Trade[].class);
+        System.out.println("/api/trader/search");
+        ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Ttrade/findOneTradeByTxnl?username=" + username + "&txni=" + txni, Trade[].class);
         System.out.println(response.toString());
         List<Trade> result = Arrays.asList(response.getBody());
         return JSONObject.toJSONString(result);
     }
-    @RequestMapping(value = "/api/seller/searchByTxni", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/api/seller/search", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     String sSearchAllTradesById(@RequestParam("txni") String txni, @ModelAttribute("currentUser") String username) {
-        System.out.println("/api/seller/searchByTxni");
-        ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Strade/getAllTradesById?username=" + username + "&txni=" + txni, Trade[].class);
+        System.out.println("/api/seller/search");
+        ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Strade/findOneTradeByTxnl?username=" + username + "&txni=" + txni, Trade[].class);
         System.out.println(response.toString());
         List<Trade> result = Arrays.asList(response.getBody());
         return JSONObject.toJSONString(result);
