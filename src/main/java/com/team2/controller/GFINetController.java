@@ -80,7 +80,7 @@ public class GFINetController {
         return mv;
     }
 
-    @RequestMapping(value = "/api/seller/getTradeList",method=RequestMethod.POST,produces = "application/json")
+    @RequestMapping(value = "/api/seller/getTradeList",method=RequestMethod.GET,produces = "application/json")
     public @ResponseBody
     String sGetAllList(@ModelAttribute("currentUser") String username) {
         ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Strade/getAllTrades?username=" + username, Trade[].class);

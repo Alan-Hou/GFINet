@@ -124,31 +124,33 @@
     }
 
     $("#search-btn").click(function () {
-        var txni=$("#search-ipt").val();
+        var txni = $("#search-ipt").val();
         $.ajax({
             url: "/api/seller/search",
-            data: {"txni":txni},
+            data: {"txni": txni},
             type: "get",
-            contentType:"application/json",
+            // contentType:"application/json",
             success: function (data) {
-                console.log("new："+$("#search-ipt").val());
-                $(".list").empty();
-                var node = $("<div></div>").addClass("row");
-                var node_origSys = $("<div></div>").addClass("list").text(getTradeOrigSys(data));
-                var node_Txnl = $("<div></div>").addClass("list").text(data[0].txni);
-                var node_sid = $("<div></div>").addClass("list").text(data[0].sender_id);
-                var node_tradetime = $("<div></div>").addClass("list").text[0](data.trade_time);
-                var node_productid = $("<div></div>").addClass("list").text(data[0].product_id);
-                var node_amount = $("<div></div>").addClass("list").text(data[0].amount);
-                var node_price = $("<div></div>").addClass("list").text(data[0].price);
-                var node_status = $("<div></div>").addClass("list").text(getStatus(data));
-                var node_receid = $("<div></div>").addClass("list").text(data[0].receiver_id);
-                node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
-                $("#list").append(node);
+                console.log("new：" + $("#search-ipt").val());
+                $(".list").remove();
+                for (key in data) {
+                    var node = $("<div></div>").addClass("row");
+                    var node_origSys = $("<div></div>").addClass("list").text(getTradeOrigSys(data[key]));
+                    var node_Txnl = $("<div></div>").addClass("list").text(data[key].txni);
+                    var node_sid = $("<div></div>").addClass("list").text(data[key].sender_id);
+                    var node_tradetime = $("<div></div>").addClass("list").text(data[key].trade_time);
+                    var node_productid = $("<div></div>").addClass("list").text(data[key].product_id);
+                    var node_amount = $("<div></div>").addClass("list").text(data[key].amount);
+                    var node_price = $("<div></div>").addClass("list").text(data[key].price);
+                    var node_status = $("<div></div>").addClass("list").text(getStatus(data[key]));
+                    var node_receid = $("<div></div>").addClass("list").text(data[key].receiver_id);
+                    node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
+                    $("#list").append(node);
+                }
 
             },
-            error:function () {
-                console.log("new: "+txni);
+            error: function () {
+                console.log("new: " + txni);
 
                 layer.msg("search error");
             }
@@ -161,7 +163,7 @@
         $.ajax(
             {
                 url: "/api/seller/getTradeList",
-                type: "post",
+                type: "get",
                 success: function (data) {
                     // new myPagination({
                     //     id: 'pagination',
@@ -241,7 +243,7 @@
             $.ajax(
                 {
                     url: "/api/seller/getTradeList",
-                    type: "post",
+                    type: "get",
                     success: function (data) {
                         // new myPagination({
                         //     id: 'pagination',
