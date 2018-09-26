@@ -90,17 +90,17 @@
 <script src="/assets/js/myPagination.js"></script>
 <script>
     var username = "${sessionScope.user.username}";
-    var data = {
-        TradeOrigSys: "trade",
-        Txnl: "123123",
-        sender_id: "12121",
-        trade_time: "2018-09-22",
-        product_id: "123213123",
-        amount: "21321",
-        price: "$123.1",
-        status: "pending",
-        receiver_id: "10001"
-    };
+    // var data = {
+    //     TradeOrigSys: "trade",
+    //     Txnl: "123123",
+    //     sender_id: "12121",
+    //     trade_time: "2018-09-22",
+    //     product_id: "123213123",
+    //     amount: "21321",
+    //     price: "$123.1",
+    //     status: "pending",
+    //     receiver_id: "10001"
+    // };
 
 
     $(function () {
@@ -120,15 +120,28 @@
         })
         for (key in  data) {
             var node = $("<div></div>").addClass("row");
-            var node_origSys = $("<div></div>").addClass("list").text(data.TradeOrigSys);
-            var node_Txnl = $("<div></div>").addClass("list").text(data.Txnl);
-            var node_sid = $("<div></div>").addClass("list").text(data.sender_id);
-            var node_tradetime = $("<div></div>").addClass("list").text(data.trade_time);
-            var node_productid = $("<div></div>").addClass("list").text(data.product_id);
-            var node_amount = $("<div></div>").addClass("list").text(data.amount);
-            var node_price = $("<div></div>").addClass("list").text(data.price);
-            var node_status = $("<div></div>").addClass("list").text(data.status);
-            var node_receid = $("<div></div>").addClass("list").text(data.receiver_id);
+            var sysType;
+            if(data[key].TradeOrigSys==0)
+            {
+                sysType="TW";
+            }
+            else{
+                sysType="SW";
+            }
+            var node_origSys = $("<div></div>").addClass("list").text(sysType);
+            var node_Txnl = $("<div></div>").addClass("list").text(data[key].Txnl);
+            var node_sid = $("<div></div>").addClass("list").text(data[key].sender_id);
+            var node_tradetime = $("<div></div>").addClass("list").text(data[key].trade_time);
+            var node_productid = $("<div></div>").addClass("list").text(data[key].product_id);
+            var node_amount = $("<div></div>").addClass("list").text(data[key].amount);
+            var node_price = $("<div></div>").addClass("list").text(data[key].price);
+            var status;
+            if(data[key].status==0)
+            {
+
+            }
+            var node_status = $("<div></div>").addClass("list").text();
+            var node_receid = $("<div></div>").addClass("list").text(data[key].receiver_id);
             // var node_btn = $("<div></div>").addClass("btn-outer").append($("<button> </button>").addClass("op_button").text("entry"));
             node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
             $("#list").append(node);

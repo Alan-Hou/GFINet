@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>SellerWorkeStation</title>
+    <title>SellWorkeStation</title>
 
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -10,8 +10,6 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/trader.css">
     <link rel="stylesheet" href="/assets/css/myPagination.css">
-
-
 </head>
 <body id="bg-picture">
 <div id="window-header" class="text-center">
@@ -37,14 +35,17 @@
     <div id="trader-list-content" style="top: 55px; position:  absolute;">
         <div id="search_part" style="width: 90%;margin: 10px auto 10px auto ;">
             search-id:
-            <input style="height: 35px;margin-right: 1%;margin-left: 1%" id="search-id">
-            <button style="color: white; background: #1E9FFF;height: 35px ;width: 70px ;border: none">search
+            <input style="height: 35px;margin-right: 1%;margin-left: 1%" id="search-ipt">
+            <button id="search-btn" style="color: white; background: #1E9FFF;height: 35px ;width: 70px ;border: none">
+                search
             </button>
             <select class="select">
-                <option value="All">All</option>
-                <option value="saab">Saab</option>
-                <option value="opel">Opel</option>
-                <option value="audi">Audi</option>
+                <option value="5">All</option>
+                <option value="0">REQUESTED</option>
+                <option value="1">PROCESSING</option>
+                <option value="2">PROCESSED</option>
+                <option value="3">REJECTED</option>
+                <option value="4">ACCEPTED</option>
             </select>
         </div>
 
@@ -89,15 +90,71 @@
 <script src="/layer/layer.js"></script>
 <script src="/assets/js/myPagination.js"></script>
 <script>
+    // var sysType;
+    // var status;
+    function getTradeOrigSys(data) {
+        if (data.TradeOrigSys == 0) {
+            return "TW";
+        }
+        else {
+            return "SW";
+        }
+    }
+
+    function getStatus(data) {
+        if (data.status == 0) {
+            return "REQUESTED";
+        }
+        else if (data.status == 1) {
+            return "PROCESSING";
+        }
+        else if (data.status == 2) {
+            return "PROCESSED";
+        }
+        else if (data.status == 3) {
+            return "REJECTED";
+        }
+        else if (data.status == 4) {
+            return "ACCEPTED";
+        }
+        else {
+            layer.msg("error");
+        }
+
+    }
+
+    $("#search-btn").click(function () {
+        $.ajax({
+            url: "/api/seller/search",
+            data: $("#search-ipt".val()),
+            type: "post",
+            success: function (data) {
+                $("#list").empty();
+                var node = $("<div></div>").addClass("row");
+                var node_origSys = $("<div></div>").addClass("list").text(getTradeOrigSys(data));
+                var node_Txnl = $("<div></div>").addClass("list").text(data[0].txni);
+                var node_sid = $("<div></div>").addClass("list").text(data[0].sender_id);
+                var node_tradetime = $("<div></div>").addClass("list").text[0](data.trade_time);
+                var node_productid = $("<div></div>").addClass("list").text(data[0].product_id);
+                var node_amount = $("<div></div>").addClass("list").text(data[0].amount);
+                var node_price = $("<div></div>").addClass("list").text(data[0].price);
+                var node_status = $("<div></div>").addClass("list").text(getStatus(data));
+                var node_receid = $("<div></div>").addClass("list").text(data[0].receiver_id);
+                node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
+                $("#list").append(node);
+
+            }
+        })
+    })
+
     $(function () {
         var pageNum;
         $("#user-logout").text();
         $.ajax(
             {
-                url:"/api/getTradeList",
-                type:"post",
-                success:function(data)
-                {
+                url: "/api/getTradeList",
+                type: "post",
+                success: function (data) {
                     // new myPagination({
                     //     id: 'pagination',
                     //     curPage: 1, //初始页码
@@ -119,41 +176,30 @@
 
 
                     // for (var key=10*pageNum;key<10*(pageNum+1);key++) {
-                    for(key in data){
-                        console.log("data");
-                        console.log("I get data :",data);
+                    console.log("I get data :", data);
+
+                    for (key in data) {
                         console.log(data.length);
                         var node = $("<div></div>").addClass("row");
-                        var node_origSys = $("<div></div>").addClass("list").text(data[key].tradeOrigSys);
+                        var node_origSys = $("<div></div>").addClass("list").text(getTradeOrigSys(data[key]));
                         var node_Txnl = $("<div></div>").addClass("list").text(data[key].txni);
                         var node_sid = $("<div></div>").addClass("list").text(data[key].sender_id);
                         var node_tradetime = $("<div></div>").addClass("list").text(data[key].trade_time);
                         var node_productid = $("<div></div>").addClass("list").text(data[key].product_id);
                         var node_amount = $("<div></div>").addClass("list").text(data[key].amount);
                         var node_price = $("<div></div>").addClass("list").text(data[key].price);
-                        var node_status = $("<div></div>").addClass("list").text(data[key].status);
+                        var node_status = $("<div></div>").addClass("list").text(getStatus(data[key]));
                         var node_receid = $("<div></div>").addClass("list").text(data[key].receiver_id);
                         node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
                         $("#list").append(node);
                     }
                     console.log("4");
-
-
                 },
-                error:function()
-                {
+                error: function () {
                     layer.msg("error");
                 }
             }
         )
-
-
-        // var newdata=JSON.parse(data);
-        // var jsonArr = [{},{}]
-        // var trades=JSON.parse(trades);
-
-        // console.log("I get data :",data);
-
     });
 
     $("#submit").click(function () {
@@ -177,8 +223,97 @@
 
         })
 
-    })
+    });
+    $(".select").bind("change", function () {
+        console.log("hello ", $(".select").eq(0).val());
+        console.log("this" + $(this));
+        var status = $(this).val();
+        console.log("status" + status);
+        if (status == 5) {
+            $.ajax(
+                {
+                    url: "/api/getTradeList",
+                    type: "post",
+                    success: function (data) {
+                        // new myPagination({
+                        //     id: 'pagination',
+                        //     curPage: 1, //初始页码
+                        //     pageTotal:2, //总页数
+                        //     pageAmount: 10,  //每页多少条
+                        //     dataTotal: data.length, //总共多少条数据
+                        //     pageSize: 5, //可选,分页个数
+                        //     showPageTotalFlag: true, //是否显示数据统计
+                        //     showSkipInputFlag: true, //是否支持跳转
+                        //     getPage: function (page) {
+                        //         pageNum=page;
+                        //         console.log(page);
+                        //         console.log("12312");
+                        //     }
+                        // })
+                        // console.log("1");
+                        // console.log("2");
+                        // console.log("3");
 
+
+                        // for (var key=10*pageNum;key<10*(pageNum+1);key++) {
+                        console.log("I get data :", data);
+
+                        for (key in data) {
+                            console.log(data.length);
+                            var node = $("<div></div>").addClass("row");
+                            var node_origSys = $("<div></div>").addClass("list").text(getTradeOrigSys(data[key]));
+                            var node_Txnl = $("<div></div>").addClass("list").text(data[key].txni);
+                            var node_sid = $("<div></div>").addClass("list").text(data[key].sender_id);
+                            var node_tradetime = $("<div></div>").addClass("list").text(data[key].trade_time);
+                            var node_productid = $("<div></div>").addClass("list").text(data[key].product_id);
+                            var node_amount = $("<div></div>").addClass("list").text(data[key].amount);
+                            var node_price = $("<div></div>").addClass("list").text(data[key].price);
+                            var node_status = $("<div></div>").addClass("list").text(getStatus(data[key]));
+                            var node_receid = $("<div></div>").addClass("list").text(data[key].receiver_id);
+                            node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
+                            $("#list").append(node);
+                        }
+                        console.log("4");
+                    },
+                    error: function () {
+                        layer.msg("error");
+                    }
+                }
+            )
+
+        }
+        else {
+
+            $.ajax(
+                {
+                    url: "/api/seller/searchByStatus",
+                    type: "get",
+                    data: {"status": status},
+                    success: function (data) {
+                        console.log(data);
+                        $(".list").remove();
+                        for (key in data) {
+                            var node = $("<div></div>").addClass("row");
+                            var node_origSys = $("<div></div>").addClass("list").text(getTradeOrigSys(data));
+                            var node_Txnl = $("<div></div>").addClass("list").text(data[key].txni);
+                            var node_sid = $("<div></div>").addClass("list").text(data[key].sender_id);
+                            var node_tradetime = $("<div></div>").addClass("list").text(data[key].trade_time);
+                            var node_productid = $("<div></div>").addClass("list").text(data[key].product_id);
+                            var node_amount = $("<div></div>").addClass("list").text(data[key].amount);
+                            var node_price = $("<div></div>").addClass("list").text(data[key].price);
+                            var node_status = $("<div></div>").addClass("list").text(getStatus(data[key]));
+                            var node_receid = $("<div></div>").addClass("list").text(data[key].receiver_id);
+                            node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
+                            $("#list").append(node);
+                        }
+                    },
+                    error: function () {
+                        layer.msg("select error");
+                    }
+                }
+            )
+        }
+    })
     $("#trade-add").click(function () {
         $("#trade-list").removeClass("highlight");
         $("#trade-add").addClass("highlight")
