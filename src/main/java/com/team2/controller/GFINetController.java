@@ -36,15 +36,12 @@ public class GFINetController {
     @RequestMapping(value = "/api/login", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     UserResult doLogin(@RequestParam("username") String username, @RequestParam("password") String password) {
-
         System.out.println("/api/login");
         ResponseEntity<UserResult> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/user?username=" + username + "&password=" + password, UserResult.class);
         System.out.println(response.toString());
         UserResult result = response.getBody();
-
         return result;
     }
-
 
     @RequestMapping(value = "/api/logout", method = RequestMethod.GET)
     public ModelAndView logout(SessionStatus status) {
@@ -54,19 +51,23 @@ public class GFINetController {
         return mv;
     }
 
-    @RequestMapping(value = "/api/trader", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/api/trader", method = RequestMethod.GET, produces = "application/text")
     public @ResponseBody
     ModelAndView searchAllTrades(@RequestParam("username") String username) {
         System.out.println("/api/trader");
         ModelAndView mv = new ModelAndView();
         ModelMap map = mv.getModelMap();
         map.addAttribute("currentUser", username);
-        ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/getAllTrades?username=" + username, Trade[].class);
-        System.out.println(response.toString());
-        List<Trade> result = Arrays.asList(response.getBody());
-        mv.addObject("Trade", result);
         mv.setViewName("trader");
         return mv;
+    }
+
+    @RequestMapping(value = "/api/trader/getTradeList",method=RequestMethod.POST,produces = "application/json")
+    public @ResponseBody
+    String tGetAllList(@ModelAttribute("currentUser") String username) {
+        ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Ttrade/getAllTrades?username=" + username, Trade[].class);
+        List<Trade> result = Arrays.asList(response.getBody());
+        return JSONObject.toJSONString(result);
     }
 
     @RequestMapping(value = "/api/seller", method = RequestMethod.GET, produces = "application/text")
@@ -78,31 +79,59 @@ public class GFINetController {
         mv.setViewName("seller");
         return mv;
     }
-    @RequestMapping(value = "/api/getTradeList",method=RequestMethod.POST,produces = "application/json")
+
+    @RequestMapping(value = "/api/seller/getTradeList",method=RequestMethod.POST,produces = "application/json")
     public @ResponseBody
-    String getAllList(@ModelAttribute("currentUser") String username)
-    {
+    String sGetAllList(@ModelAttribute("currentUser") String username) {
         ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Strade/getAllTrades?username=" + username, Trade[].class);
         List<Trade> result = Arrays.asList(response.getBody());
         return JSONObject.toJSONString(result);
-
     }
+
     @RequestMapping(value = "/api/trader/searchByStatus", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    Trade searchAllTradesByStatus(@RequestParam("status") Integer status, @ModelAttribute("currentUser") String username) {
+    String tSearchAllTradesByStatus(@RequestParam("id") Integer status, @ModelAttribute("currentUser") String username) {
         System.out.println("/api/trader/searchByStatus");
-        ResponseEntity<Trade> response = restTemplate.getForEntity("http://localhost:8080/get/Ttrade/getAllTradesByStatus?username=" + username + "&status=" + status, Trade.class);
+        ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Ttrade/getAllTradesByStatus?username=" + username + "&status=" + status, Trade[].class);
         System.out.println(response.toString());
-        Trade result = response.getBody();
-        return result;
+        List<Trade> result = Arrays.asList(response.getBody());
+        return JSONObject.toJSONString(result);
     }
+    @RequestMapping(value = "/api/seller/searchByStatus", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    String sSearchAllTradesByStatus(@RequestParam("status") Integer status, @ModelAttribute("currentUser") String username) {
+        System.out.println("/api/seller/searchByStatus");
+        ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Strade/getAllTradesByStatus?username=" + username + "&status=" + status, Trade[].class);
+        System.out.println(response.toString());
+        List<Trade> result = Arrays.asList(response.getBody());
+        return JSONObject.toJSONString(result);
+    }
+    @RequestMapping(value = "/api/trader/searchByTxni", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    String tSearchAllTradesById(@RequestParam("txni") String txni, @ModelAttribute("currentUser") String username) {
+        System.out.println("/api/trader/searchByTxni");
+        ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Ttrade/getAllTradesById?username=" + username + "&txni=" + txni, Trade[].class);
+        System.out.println(response.toString());
+        List<Trade> result = Arrays.asList(response.getBody());
+        return JSONObject.toJSONString(result);
+    }
+    @RequestMapping(value = "/api/seller/searchByTxni", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    String sSearchAllTradesById(@RequestParam("txni") String txni, @ModelAttribute("currentUser") String username) {
+        System.out.println("/api/seller/searchByTxni");
+        ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Strade/getAllTradesById?username=" + username + "&txni=" + txni, Trade[].class);
+        System.out.println(response.toString());
+        List<Trade> result = Arrays.asList(response.getBody());
+        return JSONObject.toJSONString(result);
+    }
+
     @RequestMapping(value = "/api/trader/addOneTrade", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    String tAddOneTrade(@RequestParam("product_id") String productId,
+    String tAddOneTrade(@ModelAttribute("currentUser") String username,
+                        @RequestParam("product_id") String productId,
                         @RequestParam("amount") Integer amount,
                         @RequestParam("price") Integer price,
-                        @RequestParam("receiver_id") String receiverId,
-                        @ModelAttribute("currentUser") String username) {
+                        @RequestParam("receiver_id") String receiverId){
         System.out.println("/api/trader/addOneTrade");
         HttpHeaders headers = new HttpHeaders();
         MediaType type = MediaType.parseMediaType("application/json;charset=UTF-8");
@@ -126,11 +155,11 @@ public class GFINetController {
 
     @RequestMapping(value = "/api/seller/addOneTrade", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    String sAddOneTrade(@RequestParam("product_id") String productId,
+    String sAddOneTrade(@ModelAttribute("currentUser") String username,
+                        @RequestParam("product_id") String productId,
                         @RequestParam("amount") Integer amount,
                         @RequestParam("price") Integer price,
-                        @RequestParam("receiver_id") String receiverId,
-                        @ModelAttribute("currentUser") String username) {
+                        @RequestParam("receiver_id") String receiverId) {
         System.out.println("/api/seller/addOneTrade");
         HttpHeaders headers = new HttpHeaders();
         MediaType type = MediaType.parseMediaType("application/json;charset=UTF-8");
@@ -152,6 +181,4 @@ public class GFINetController {
         System.out.println(result);
         return result;
     }
-
-
 }
