@@ -126,7 +126,7 @@
     $("#search-btn").click(function () {
         $.ajax({
             url: "/api/seller/search",
-            data: $("#search-ipt".val()),
+            data: {"txni":$("#search-ipt").text()},
             type: "post",
             success: function (data) {
                 $("#list").empty();
@@ -152,7 +152,7 @@
         $("#user-logout").text();
         $.ajax(
             {
-                url: "/api/getTradeList",
+                url: "/api/seller/getTradeList",
                 type: "post",
                 success: function (data) {
                     // new myPagination({
@@ -232,7 +232,7 @@
         if (status == 5) {
             $.ajax(
                 {
-                    url: "/api/getTradeList",
+                    url: "/api/seller/getTradeList",
                     type: "post",
                     success: function (data) {
                         // new myPagination({
