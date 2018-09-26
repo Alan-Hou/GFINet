@@ -124,12 +124,15 @@
     }
 
     $("#search-btn").click(function () {
+        var txni=$("#search-ipt").val();
         $.ajax({
             url: "/api/seller/search",
-            data: {"txni":$("#search-ipt").text()},
-            type: "post",
+            data: {"txni":txni},
+            type: "get",
+            contentType:"application/json",
             success: function (data) {
-                $("#list").empty();
+                console.log("new："+$("#search-ipt").val());
+                $(".list").empty();
                 var node = $("<div></div>").addClass("row");
                 var node_origSys = $("<div></div>").addClass("list").text(getTradeOrigSys(data));
                 var node_Txnl = $("<div></div>").addClass("list").text(data[0].txni);
@@ -143,6 +146,11 @@
                 node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
                 $("#list").append(node);
 
+            },
+            error:function () {
+                console.log("new: "+txni);
+
+                layer.msg("search error");
             }
         })
     })

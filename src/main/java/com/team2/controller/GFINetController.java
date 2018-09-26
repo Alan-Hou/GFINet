@@ -90,7 +90,7 @@ public class GFINetController {
 
     @RequestMapping(value = "/api/trader/searchByStatus", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    String tSearchAllTradesByStatus(@RequestParam("id") Integer status, @ModelAttribute("currentUser") String username) {
+    String tSearchAllTradesByStatus(@RequestParam("status") Integer status, @ModelAttribute("currentUser") String username) {
         System.out.println("/api/trader/searchByStatus");
         ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Ttrade/getAllTradesByStatus?username=" + username + "&status=" + status, Trade[].class);
         System.out.println(response.toString());
@@ -120,8 +120,8 @@ public class GFINetController {
     String sSearchAllTradesById(@RequestParam("txni") String txni, @ModelAttribute("currentUser") String username) {
         System.out.println("/api/seller/search");
         ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Strade/findOneTradeByTxnl?username=" + username + "&txni=" + txni, Trade[].class);
-        System.out.println(response.toString());
         List<Trade> result = Arrays.asList(response.getBody());
+        System.out.println("json******"+JSONObject.toJSONString(result));
         return JSONObject.toJSONString(result);
     }
 
