@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>SellWorkeStation</title>
+    <title>TraderWorkeStation</title>
 
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -16,7 +16,7 @@
 <div id="window-header" class="text-center">
     <div if="logo" style="width: 50%;height: 100% ;float: left">
         <img style="padding-left:20px;height: 80px ;width: 160px;float: left" src="/assets/img/citi.png">
-        <h1 style="color: white">Seller Workstation</h1>
+        <h1 style="color: white">Trader Workstation</h1>
     </div>
     <div id="username" style="float: right ;height: 100%;margin-right: 50px ;margin-top: 20px">
         <a id="user-logout" style="text-decoration:none; color: white" href="/api/logout" style="color: white"></a>
@@ -127,7 +127,7 @@
     $("#search-btn").click(function () {
         var txni = $("#search-ipt").val();
         $.ajax({
-            url: "/api/seller/search",
+            url: "/api/trader/search",
             data: {"txni": txni},
             type: "get",
             // contentType:"application/json",
@@ -163,7 +163,7 @@
         $("#user-logout").text();
         $.ajax(
             {
-                url: "/api/seller/getTradeList",
+                url: "/api/trader/getTradeList",
                 type: "get",
                 success: function (data) {
                     console.log("1")
@@ -221,7 +221,7 @@
         console.log("predata"+product_id,amount,price,receiver_id)
         // alert("click");
         $.ajax({
-            url: "/api/seller/addOneTrade",
+            url: "/api/trader/addOneTrade",
             type: "post",
             data: {
                 product_id: product_id,
@@ -271,7 +271,7 @@
         if (status == 5) {
             $.ajax(
                 {
-                    url: "/api/seller/getTradeList",
+                    url: "/api/trader/getTradeList",
                     type: "get",
                     success: function (data) {
                         // new myPagination({
@@ -325,7 +325,7 @@
 
             $.ajax(
                 {
-                    url: "/api/seller/searchByStatus",
+                    url: "/api/trader/searchByStatus",
                     type: "get",
                     data: {"status": status},
                     success: function (data) {
