@@ -99,6 +99,7 @@
 #trade-add-form{
     width: 90%;
     margin: auto;
+    padding-top:5%;
 }
 #trade-add-content{
     top: 55px ;
@@ -111,11 +112,12 @@
 #trade-add-form label{
     /*font-size: large;*/
     font-weight: normal;
-    margin: 20px;
+    margin: 10px 0;
     width:100px;
+    text-align: center;
 }
 #trade-add-form input{
-    margin: 20px;
+    margin: 10px 5px;
     height: 40px;
     width: 70%;
     border: none;
@@ -181,4 +183,13 @@ footer {
 
 footer a {
     color: #1E9FFF;
+}
+#submit{
+    text-align: center;
+    width: 70px;
+    height: 35px;
+    margin: 50px auto;
+    color: white;
+    background-color:#1E9FFF;
+    padding-top: 8px;
 }

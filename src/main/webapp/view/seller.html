@@ -10,6 +10,7 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/trader.css">
     <link rel="stylesheet" href="/assets/css/myPagination.css">
+    <!--<base href="localhost:8080" />-->
 </head>
 <body id="bg-picture">
 <div id="window-header" class="text-center">
@@ -79,7 +80,7 @@
             <label>receiver-id</label>
             <input id="receiver-id">
             <br>
-            <button id="submit"> submit</button>
+            <div id="submit"> submit</div>
         </form>
 
 
@@ -165,30 +166,12 @@
                 url: "/api/seller/getTradeList",
                 type: "get",
                 success: function (data) {
-                    // new myPagination({
-                    //     id: 'pagination',
-                    //     curPage: 1, //初始页码
-                    //     pageTotal:2, //总页数
-                    //     pageAmount: 10,  //每页多少条
-                    //     dataTotal: data.length, //总共多少条数据
-                    //     pageSize: 5, //可选,分页个数
-                    //     showPageTotalFlag: true, //是否显示数据统计
-                    //     showSkipInputFlag: true, //是否支持跳转
-                    //     getPage: function (page) {
-                    //         pageNum=page;
-                    //         console.log(page);
-                    //         console.log("12312");
-                    //     }
-                    // })
-                    // console.log("1");
-                    // console.log("2");
-                    // console.log("3");
+                    console.log("1")
+                    console.log("2")
+                    console.log(pageNum);
 
-
-                    // for (var key=10*pageNum;key<10*(pageNum+1);key++) {
-                    console.log("I get data :", data);
-
-                    for (key in data) {
+                    for ( key=10*pageNum;key<10*(pageNum+1);key++) {
+                    // for (key in data) {
                         console.log(data.length);
                         var node = $("<div></div>").addClass("row");
                         var node_origSys = $("<div></div>").addClass("list").text(getTradeOrigSys(data[key]));
@@ -203,7 +186,6 @@
                         node.append(node_origSys, node_Txnl, node_sid, node_tradetime, node_productid, node_amount, node_price, node_status, node_receid);
                         $("#list").append(node);
                     }
-                    console.log("4");
                 },
                 error: function () {
                     layer.msg("error");
@@ -211,29 +193,57 @@
             }
         )
     });
+    function demo(data)
+    {
+
+        new myPagination({
+            id: 'pagination',
+            curPage: 1, //初始页码
+            pageTotal:(data.length/2)-1, //总页数
+            pageAmount: 2,  //每页多少条
+            dataTotal: data.length, //总共多少条数据
+            pageSize: 5, //可选,分页个数
+            showPageTotalFlag: true, //是否显示数据统计
+            showSkipInputFlag: true, //是否支持跳转
+            getPage: function (page) {
+                pageNum=page;
+                console.log("page"+page);
+            }
+        })
+    }
 
     $("#submit").click(function () {
-        var product_id = $("product-id").val();
-        var amount = $("amount").val();
-        var price = $("price").val();
-        var receiver_id = $("receiver-id").val();
+        console.log("111111111111");
+        var product_id = $("#product-id").val();
+        var amount = $("#amount").val();
+        var price = $("#price").val();
+        var receiver_id = $("#receiver-id").val();
+        console.log("predata"+product_id,amount,price,receiver_id)
+       // alert("click");
         $.ajax({
-            url: '/api/seller/addOneTrade',
+            url: "/api/seller/addOneTrade",
             type: "post",
-            data: {product_id: product_id, amount: amount, price: price, receiver_id: receiver_id},
+            data: {
+                product_id: product_id,
+                amount: amount,
+                price: price,
+                receiver_id: receiver_id,
+                currentUser:"testuser"
+            },
             success: function (data) {
-                layer.msg(data.status);
+                layer.msg(data.infomation);
                 // location.reload();
             },
             error: function () {
                 console.log(product_id);
-                layer.msg("error")
+                layer.msg("submit-error")
                 // location.reload();
             }
 
-        })
+        });
 
     });
+
     $(".select").bind("change", function () {
         console.log("hello ", $(".select").eq(0).val());
         console.log("this" + $(this));

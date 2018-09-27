@@ -69,7 +69,8 @@
         }
     }
 
-    document.querySelector(".login-button").onclick = function (data) {
+    // document.querySelector(".login-button").onclick =
+     $(".login-button").click(function (data) {
         var formData = new FormData(document.getElementById("login-form"));
         var username=$("#username").val();
         var password=$("#password").val();
@@ -95,14 +96,13 @@
                 else {
                     layer.msg(data.describe);
                     if (data.usertype == 0) {
-                        location.href = "/api/treder?username=testuser";
+                        location.href = "/api/treder?username="+username;
                     }
                     else if (data.usertype == 1) {
-                        location.href = "/api/seller?username=testuser";
+                        location.href = "/api/seller?username="+username;
                     }
                     else {
                         layer.msg("user type is not exist");
-
                     }
                 }
             },
@@ -116,7 +116,7 @@
             layer.msg("time out")
 
         }, 5000)
-    }
+    })
 </script>
 </body>
 </html>
