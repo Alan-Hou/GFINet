@@ -2,6 +2,7 @@ package com.team2.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.team2.result.Trade;
+import com.team2.result.TradeResult;
 import com.team2.result.UserResult;
 import com.team2.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +69,13 @@ public class GFINetController {
     String tGetAllList(@ModelAttribute("currentUser") String username) {
         ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Ttrade/getAllTrades?username=" + username, Trade[].class);
         List<Trade> result = Arrays.asList(response.getBody());
-        return JSONObject.toJSONString(result);
+        List<TradeResult> tradeResults=new ArrayList<TradeResult>();
+        for (Trade t:result
+                ) {
+            tradeResults.add(new TradeResult(t));
+        }
+        System.out.println(JSONObject.toJSONString(tradeResults));
+        return JSONObject.toJSONString(tradeResults);
     }
 
     @RequestMapping(value = "/api/seller", method = RequestMethod.GET, produces = "application/text")
@@ -83,9 +91,15 @@ public class GFINetController {
     @RequestMapping(value = "/api/seller/getTradeList",method=RequestMethod.GET,produces = "application/json")
     public @ResponseBody
     String sGetAllList(@ModelAttribute("currentUser") String username) {
+        System.out.println("/api/seller/getTradeList");
         ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Strade/getAllTrades?username=" + username, Trade[].class);
         List<Trade> result = Arrays.asList(response.getBody());
-        return JSONObject.toJSONString(result);
+        List<TradeResult> tradeResults=new ArrayList<TradeResult>();
+        for(Trade t: result) {
+            tradeResults.add(new TradeResult(t));
+        }
+        System.out.println(JSONObject.toJSONString(tradeResults));
+        return JSONObject.toJSONString(tradeResults);
     }
 
     @RequestMapping(value = "/api/trader/searchByStatus", method = RequestMethod.GET, produces = "application/json")
@@ -95,7 +109,13 @@ public class GFINetController {
         ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Ttrade/getAllTradesByStatus?username=" + username + "&status=" + status, Trade[].class);
         System.out.println(response.toString());
         List<Trade> result = Arrays.asList(response.getBody());
-        return JSONObject.toJSONString(result);
+        List<TradeResult> tradeResults=new ArrayList<TradeResult>();
+        for (Trade t:result
+                ) {
+            tradeResults.add(new TradeResult(t));
+        }
+        System.out.println(JSONObject.toJSONString(tradeResults));
+        return JSONObject.toJSONString(tradeResults);
     }
     @RequestMapping(value = "/api/seller/searchByStatus", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
@@ -104,7 +124,13 @@ public class GFINetController {
         ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Strade/getAllTradesByStatus?username=" + username + "&status=" + status, Trade[].class);
         System.out.println(response.toString());
         List<Trade> result = Arrays.asList(response.getBody());
-        return JSONObject.toJSONString(result);
+        List<TradeResult> tradeResults=new ArrayList<TradeResult>();
+        for (Trade t:result
+                ) {
+            tradeResults.add(new TradeResult(t));
+        }
+        System.out.println(JSONObject.toJSONString(tradeResults));
+        return JSONObject.toJSONString(tradeResults);
     }
     @RequestMapping(value = "/api/trader/search", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
@@ -113,7 +139,13 @@ public class GFINetController {
         ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Ttrade/findOneTradeByTxnl?username=" + username + "&txni=" + txni, Trade[].class);
         System.out.println(response.toString());
         List<Trade> result = Arrays.asList(response.getBody());
-        return JSONObject.toJSONString(result);
+        List<TradeResult> tradeResults=new ArrayList<TradeResult>();
+        for (Trade t:result
+                ) {
+            tradeResults.add(new TradeResult(t));
+        }
+        System.out.println(JSONObject.toJSONString(tradeResults));
+        return JSONObject.toJSONString(tradeResults);
     }
     @RequestMapping(value = "/api/seller/search", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
@@ -121,8 +153,13 @@ public class GFINetController {
         System.out.println("/api/seller/search");
         ResponseEntity<Trade[]> response = restTemplate.getForEntity("http://192.168.43.95:8080/get/Strade/findOneTradeByTxnl?username=" + username + "&txni=" + txni, Trade[].class);
         List<Trade> result = Arrays.asList(response.getBody());
-        System.out.println("json******"+JSONObject.toJSONString(result));
-        return JSONObject.toJSONString(result);
+        List<TradeResult> tradeResults=new ArrayList<TradeResult>();
+        for (Trade t:result
+             ) {
+         tradeResults.add(new TradeResult(t));
+        }
+        System.out.println(JSONObject.toJSONString(tradeResults));
+        return JSONObject.toJSONString(tradeResults);
     }
 
     @RequestMapping(value = "/api/trader/addOneTrade", method = RequestMethod.POST, produces = "application/json")
@@ -138,19 +175,18 @@ public class GFINetController {
         headers.setContentType(type);
         headers.add("Accept", MediaType.APPLICATION_JSON.toString());
         JSONObject object = new JSONObject();
-        object.put("tradeOriSys", Constant.TW);
+        object.put("tradeOrigSys", Constant.TW);
         object.put("sender_id", username);
-        Date trader_time = new Date();
-        object.put("trader_time", trader_time);
+        Date trade_time = new Date();
+        object.put("trade_time", trade_time);
         object.put("product_id", productId);
         object.put("amount", amount);
         object.put("price", price);
         object.put("receiver_id", receiverId);
         object.put("status", Constant.REQUESTED);
         HttpEntity<String> formEntity = new HttpEntity<String>(object.toString(), headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("http://192.168.43.95:8080/add/Ttrade/addOneTtrade", formEntity, String.class);
-        String result = response.getBody();
-        return result;
+        String response = restTemplate.postForObject("http://192.168.43.95:8080/add/Ttrade/addOneTtrade", formEntity, String.class);
+        return response;
     }
 
     @RequestMapping(value = "/api/seller/addOneTrade", method = RequestMethod.POST, produces = "application/json")
@@ -166,19 +202,17 @@ public class GFINetController {
         headers.setContentType(type);
         headers.add("Accept", MediaType.APPLICATION_JSON.toString());
         JSONObject object = new JSONObject();
-        object.put("tradeOriSys", Constant.TW);
+        object.put("tradeOrigSys", Constant.TW);
         object.put("sender_id", username);
-        Date trader_time = new Date();
-        object.put("trader_time", trader_time);
+        Date trade_time = new Date();
+        object.put("trade_time", trade_time);
         object.put("product_id", productId);
         object.put("amount", amount);
         object.put("price", price);
         object.put("receiver_id", receiverId);
         object.put("status", Constant.REQUESTED);
         HttpEntity<String> formEntity = new HttpEntity<String>(object.toString(), headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("http://192.168.43.95:8080/add/Strade/addOneTtrade", formEntity, String.class);
-        String result = response.getBody();
-        System.out.println(result);
-        return result;
+        String response = restTemplate.postForObject("http://192.168.43.95:8080/add/Strade/addOneTtrade", formEntity, JSONObject.class).toString();
+        return response;
     }
 }
